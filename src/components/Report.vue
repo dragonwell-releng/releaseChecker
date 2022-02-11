@@ -1,41 +1,51 @@
 <template>
-  <v-container>
+  <v-container fluid>
     <v-card>
       <v-row>
-        <v-col>
+        <v-col cols="6">
           <v-select
               :items="releases"
               v-model="release"
-              label="Outlined style"
+              label="版本"
               dense
               outlined>
           </v-select>
         </v-col>
-        <v-col>
+        <v-col cols="6">
           <v-select
               :items="types"
               v-model="type"
-              label="Outlined style"
+              label="产品"
               dense
               outlined>
           </v-select>
         </v-col>
-        <v-col>
-          启动检查
-          <v-btn icon color="orange" target="_blank" @click="panel = [0]">
-            <v-icon>mdi-arrow-down-bold-circle</v-icon>
-          </v-btn>
-        </v-col>
-      </v-row>
-      <v-row>
-        <v-col>
+        <v-col cols="12">
+          <v-card>
+            <v-card-title>发布历史</v-card-title>
+            <v-data-table
+                :headers="headers"
+                :items="historyReleases"
+            >
+              <template v-slot:item.score="{ item }">
+                <div v-if="item.score > 0">
+                  <v-chip color="primary">{{ item.score }}</v-chip>
+                </div>
+                <div v-else>
+                  <v-icon color="red">mdi-exclamation</v-icon>
+                </div>
+              </template>
 
+            </v-data-table>
+          </v-card>
+        </v-col>
+        <v-col cols="12">
           <v-expansion-panels
               v-model="panel"
               multiple
           >
             <v-expansion-panel>
-              <v-expansion-panel-header>检查详情</v-expansion-panel-header>
+              <v-expansion-panel-header>检查详情 - 完成发布11.0.14.10</v-expansion-panel-header>
               <v-expansion-panel-content>
                 <v-stepper v-model="e1" non-linear>
                   <v-stepper-header>
@@ -80,7 +90,6 @@
 
 
                       </v-card>
-
                     </v-stepper-content>
 
                     <v-stepper-content step="2">
@@ -131,7 +140,31 @@ export default {
       releases: [8, 11, 17],
       e1: 1,
       panel: [0],
+      headers: [
+        {text: '版本号', value: 'version', sortable: true,},
+        {text: '产品', value: 'product', sortable: false},
+        {text: '发布时间', value: 'time', sortable: false,},
+        {text: '发布进度', value: 'status', sortable: false,},
+      ],
+      historyReleases: [
+        {
+          version: "11.0.14.10",
+          product: "Dragonwell",
+          time: "2022-02-11 16:19:16",
+          status: "prerelease"
+        },
+        {
+          version: "11.0.13.9",
+          product: "Dragonwell",
+          time: "2021-12-11 16:19:16",
+          status: "release"
+        },
+      ]
     }
+  },
+  methods: {},
+  mounted() {
+    console.log(this.historyReleases)
   }
 }
 </script>
